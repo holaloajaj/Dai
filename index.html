@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DailyJokez</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6a1b9a, #9c27b0); /* Purplish gradient */
+            border: 10px solid #4a148c; /* Wide purple border around the page */
+            box-sizing: border-box;
+            flex-direction: column; /* Ensures the footer stays at the bottom */
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff; /* Blue color for the button */
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue for hover effect */
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: #f4f4f9; /* Light background for the popup */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 80%;
+        }
+
+        #closePopup {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        #closePopup:hover {
+            background-color: #d32f2f;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 14px;
+            color: white;
+            margin-top: 20px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DailyJokez</h1>
+        <button id="getJokeButton">Get Joke</button>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <p id="jokeText">Your joke will appear here.</p>
+            <button id="closePopup">Close</button>
+        </div>
+    </div>
+
+    <!-- Footer with copyright message -->
+    <footer>
+        <p>&copy; 2025 DailyJokez. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const jokes = [
+            "Why don’t skeletons fight each other? They don’t have the guts.",
+            "I told my wife she was drawing her eyebrows too high. She looked surprised.",
+            "Why don't oysters donate to charity? Because they are shellfish.",
+            "I used to play piano by ear, but now I use my hands.",
+            "Why don’t seagulls fly over the bay? Because then they’d be bagels!",
+            "I used to be a baker, but I couldn't make enough dough.",
+            "Why don't ants get sick? Because they have tiny ant-bodies!",
+            "I told my computer I needed a break, and now it won’t stop sending me Kit-Kats.",
+            "I’m reading a book about anti-gravity. It’s impossible to put down.",
+            "I used to be a photographer, but I couldn’t make enough money. I guess my career just didn’t develop.",
+            "What do you call fake spaghetti? An impasta!",
+            "How does a penguin build its house? Igloos it together!",
+            "Why did the bicycle fall over? It was two-tired!",
+            "Why don’t skeletons ever go trick or treating? Because they have no body to go with.",
+            "I told my wife she was drawing her eyebrows too high. She looked surprised.",
+            "What do you call a factory that makes good products? A satisfactory.",
+            "Why did the golfer bring two pairs of pants? In case he got a hole in one!",
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "I used to be a baker, but I couldn’t make enough dough.",
+            "Why do cows wear bells? Because their horns don’t work!",
+            "Why was the math book sad? It had too many problems.",
+            "What do you call a snowman with a six-pack? An abdominal snowman.",
+            "I told my computer I needed a break, and now it won’t stop sending me Kit-Kats.",
+            "Why don’t skeletons fight each other? They don’t have the guts.",
+            "Why did the mushroom go to the party? Because he was a fungi!",
+            "What did the left eye say to the right eye? Between you and me, something smells.",
+            "Why can’t your nose be 12 inches long? Because then it would be a foot.",
+            "What do you get when you cross a snowman with a vampire? Frostbite.",
+            "Why did the scarecrow win an award? Because he was outstanding in his field.",
+            "Why don't eggs tell each other secrets? Because they might crack up.",
+            "What do you get when you cross a cow with a trampoline? A milkshake.",
+            "Why don't skeletons ever go trick or treating? Because they have no body to go with.",
+            "I couldn't figure out how to put my seatbelt on, then it clicked.",
+            "Why do bees have sticky hair? Because they use honeycombs!",
+            "What did one ocean say to the other ocean? Nothing, they just waved.",
+            "Why don’t skeletons fight each other? They don’t have the guts.",
+            "What do you call fake spaghetti? An impasta!",
+            "I’m reading a book about anti-gravity. It’s impossible to put down.",
+            "What did the grape do when he got stepped on? Nothing but let out a little wine.",
+            "Why don’t seagulls fly over the bay? Because then they’d be bagels!",
+            "I used to play piano by ear, but now I use my hands.",
+            "Why don’t ants get sick? Because they have tiny ant-bodies!",
+            "I used to be a photographer, but I couldn’t make enough money. I guess my career just didn’t develop.",
+            "How does a penguin build its house? Igloos it together!",
+            "Why don’t oysters donate to charity? Because they are shellfish.",
+            "I used to be a baker, but I couldn’t make enough dough.",
+            "Why did the bicycle fall over? It was two-tired!",
+            "Why don't skeletons ever go trick or treating? Because they have no body to go with.",
+            "What do you call fake spaghetti? An impasta!",
+            "How does a penguin build its house? Igloos it together!",
+            "Why did the bicycle fall over? It was two-tired!",
+            "Why don’t skeletons ever go trick or treating? Because they have no body to go with."
+        ];
+
+        const getJokeButton = document.getElementById("getJokeButton");
+        const jokeText = document.getElementById("jokeText");
+        const popup = document.getElementById("popup");
+        const closePopup = document.getElementById("closePopup");
+
+        getJokeButton.addEventListener("click", () => {
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            jokeText.textContent = randomJoke;
+            popup.style.display = "flex";
+        });
+
+        closePopup.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+    </script>
+</body>
+</html>
